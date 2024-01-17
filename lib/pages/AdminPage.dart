@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'LoginPage.dart';
+import 'CameraColumn.dart';
 
-class AdminPage extends StatelessWidget {
-  const AdminPage({Key? key});
+class AdminPage extends StatefulWidget {
+  const AdminPage({Key? key}) : super(key: key);
+
+  @override
+  _AdminPageState createState() => _AdminPageState();
+}
+
+class _AdminPageState extends State<AdminPage> {
+  // Assume the admin is authenticated initially
+  bool isAdminAuthenticated = true;
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +23,10 @@ class AdminPage extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
+              // Log out the admin when the logout button is pressed
+              setState(() {
+                isAdminAuthenticated = false;
+              });
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -30,33 +43,7 @@ class AdminPage extends StatelessWidget {
         child: Column(
           children: [
             Image.asset('lib/assets/main-logo.png'),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search',
-                  prefixIcon: Icon(Icons.search),
-                ),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search by Image',
-                  suffixIcon: Icon(Icons.camera_alt_outlined),
-                ),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Add camera',
-                  suffixIcon: Icon(Icons.add_a_photo_outlined),
-                ),
-              ),
-            ),
+            // Additional drawer items for admin authentication can be added here
           ],
         ),
       ),
@@ -67,27 +54,24 @@ class AdminPage extends StatelessWidget {
             // Left Column - Cameras
             Expanded(
               flex: 6,
-              child: Card(
+              child: isAdminAuthenticated
+                  ? Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12.0),
                 ),
                 elevation: 4,
                 child: const Padding(
                   padding: EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Cameras',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 16),
-                      // List of Camera Containers goes here
-                      // You can dynamically add new containers in this area
-                    ],
+                  child: CameraColumn(),
+                ),
+              )
+                  : const Center(
+                // Show a message if the admin is not authenticated
+                child: Text(
+                  'Admin not authenticated',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),

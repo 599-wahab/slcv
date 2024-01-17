@@ -11,7 +11,6 @@ class GuardView extends StatelessWidget {
         title: const Text("Guard Dashboard"),
         backgroundColor: Colors.blue[500],
         elevation: 23,
-      
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -55,46 +54,52 @@ class GuardView extends StatelessWidget {
                       const SizedBox(height: 16),
                       // Content for the top 80% goes here
                       const Spacer(),
-                      Row(
-                        children: [
-                          const Text(
-                            'Authorized ',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Row(
+                          children: [
+                            const Text(
+                              'Authorized ',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 4),
-                          Container(
-                            width: 10,
-                            height: 5,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.green,
+                            const SizedBox(width: 4),
+                            Container(
+                              width: 10,
+                              height: 5,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.green,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 14),
-                      Row(
-                        children: [
-                          const Text(
-                            'Unauthorized ',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Row(
+                          children: [
+                            const Text(
+                              'Unauthorized ',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 4),
-                          Container(
-                            width: 10,
-                            height: 5,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.red,
+                            const SizedBox(width: 4),
+                            Container(
+                              width: 10,
+                              height: 5,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.red,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ],
                   ),
