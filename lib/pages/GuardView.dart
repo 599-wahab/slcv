@@ -26,7 +26,7 @@ class GuardView extends StatelessWidget {
                 elevation: 4,
                 child: const Padding(
                   padding: EdgeInsets.all(16.0),
-                  child: CameraColumn(), // Use the CameraColumn widget here
+                  child: CameraColumn(cameras: [],), // Use the CameraColumn widget here
                 ),
               ),
             ),
