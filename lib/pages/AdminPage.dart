@@ -1,8 +1,43 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'LoginPage.dart';
+import 'CameraColumn.dart';
 
-class AdminPage extends StatelessWidget {
-  const AdminPage({Key? key});
+class AdminPage extends StatefulWidget {
+  const AdminPage({Key? key}) : super(key: key);
+
+  @override
+  _AdminPageState createState() => _AdminPageState();
+}
+
+class _AdminPageState extends State<AdminPage> {
+  bool isAdminAuthenticated = true;
+  bool isEntriesVisible = true;
+
+  late Timer _timer;
+  static const int visibilityDuration = 20; // seconds
+
+  @override
+  void initState() {
+    super.initState();
+    _startVisibilityTimer();
+  }
+
+  void _startVisibilityTimer() {
+    _timer = Timer.periodic(const Duration(seconds: visibilityDuration), (timer) {
+      setState(() {
+        isEntriesVisible = false;
+      });
+    });
+  }
+
+  void _resetVisibilityTimer() {
+    _timer.cancel();
+    setState(() {
+      isEntriesVisible = true;
+    });
+    _startVisibilityTimer();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,12 +49,7 @@ class AdminPage extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const LoginPage(),
-                ),
-              );
+              _showLogoutConfirmationDialog();
             },
             icon: const Icon(Icons.logout),
           ),
@@ -60,120 +90,55 @@ class AdminPage extends StatelessWidget {
           ],
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          children: [
-            // Left Column - Cameras
-            Expanded(
-              flex: 6,
-              child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
-                elevation: 4,
-                child: const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Cameras',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 16),
-                      // List of Camera Containers goes here
-                      // You can dynamically add new containers in this area
-                    ],
-                  ),
-                ),
-              ),
+      body: CameraColumn(isEntriesVisible: isEntriesVisible),
+    );
+  }
+
+  void _showLogoutConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Logout Confirmation'),
+          content: Text('Are you sure you want to logout?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: Text('Cancel'),
             ),
-            // Right Column - Logs/Entries
-            Expanded(
-              flex: 3,
-              child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
-                elevation: 4,
-                color: Colors.blue[500],
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Entries',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      // Content for the top 80% goes here
-
-                      // Spacer to push the Authorized/Unauthorized to the bottom
-                      const Spacer(),
-
-                      FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Row(
-                          children: [
-                            const Text(
-                              'Authorized ',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            Container(
-                              width: 10,
-                              height: 5,
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.green,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 14),
-                      FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Row(
-                          children: [
-                            const Text(
-                              'Unauthorized ',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            Container(
-                              width: 10,
-                              height: 5,
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.red,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+            TextButton(
+              onPressed: () {
+                _logoutAndNavigateToLogin();
+              },
+              child: Text('Logout'),
             ),
           ],
-        ),
+        );
+      },
+    );
+  }
+
+  void _logoutAndNavigateToLogin() {
+    // Turn off camera
+    // Example: _cameraController.dispose();
+
+    // Logout
+    // Example: Perform logout logic here
+
+    // Navigate to login page
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const LoginPage(),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 }
