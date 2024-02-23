@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'LoginPage.dart';
 import 'CameraColumn.dart';
 import 'HomeScreen.dart'; // Import HomeScreen
-import 'RegistrationScreen.dart'; // Import RegistrationScreen
+import 'User_Registration.dart'; // Import RegistrationScreen
 
 class AdminPage extends StatefulWidget {
   const AdminPage({Key? key}) : super(key: key);
@@ -82,8 +82,8 @@ class _AdminPageState extends State<AdminPage> {
                             isHomeScreenVisible = true;
                           });
                         },
-                        icon: const Icon(Icons.image_search),
-                        label: const Text('Search by Image'),
+                        icon: const Icon(Icons.image_search, color: Colors.blue),
+                        label: const Text('Search by Image',style: TextStyle(color: Colors.blue),),
                         style: ElevatedButton.styleFrom(
                           minimumSize: const Size(double.infinity, 48), // Set minimum size
                         ),
@@ -103,8 +103,8 @@ class _AdminPageState extends State<AdminPage> {
                             ),
                           );
                         },
-                        icon: const Icon(Icons.face),
-                        label: const Text('Register'),
+                        icon: const Icon(Icons.face, color: Colors.blue),
+                        label: const Text('Register',style: TextStyle(color: Colors.blue),),
                         style: ElevatedButton.styleFrom(
                           minimumSize: const Size(double.infinity, 48), // Set minimum size
                         ),
