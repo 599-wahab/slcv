@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'RecognitionPage.dart';
-import 'dart:io';
+import 'dart:io' if (dart.library.io) 'dart:io'; // Conditional import for dart:io
 
 class HomeScreen extends StatefulWidget {
   final VoidCallback onClose; // Define the onClose callback

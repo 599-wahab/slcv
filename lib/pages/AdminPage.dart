@@ -2,8 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'LoginPage.dart';
 import 'CameraColumn.dart';
-import 'HomeScreen.dart'; // Import HomeScreen
-import 'User_Registration.dart'; // Import RegistrationScreen
+import 'HomeScreen.dart';
+import 'User_Registration.dart';
+import 'AdminSettings.dart';
 
 class AdminPage extends StatefulWidget {
   const AdminPage({Key? key}) : super(key: key);
@@ -19,6 +20,7 @@ class _AdminPageState extends State<AdminPage> {
   late Timer _timer; // Remove the timer
 
   bool isHomeScreenVisible = false;
+  bool isRegistrationVisible = false;
 
   @override
   void initState() {
@@ -39,9 +41,15 @@ class _AdminPageState extends State<AdminPage> {
         actions: [
           IconButton(
             onPressed: () {
-              _showLogoutConfirmationDialog();
+              if (isRegistrationVisible) {
+                setState(() {
+                  isRegistrationVisible = false;
+                });
+              } else {
+                _showLogoutConfirmationDialog();
+              }
             },
-            icon: const Icon(Icons.logout),
+            icon: Icon(isRegistrationVisible ? Icons.arrow_back : Icons.logout),
           ),
         ],
       ),
@@ -50,7 +58,7 @@ class _AdminPageState extends State<AdminPage> {
         child: Stack(
           children: [
             Visibility(
-              visible: !isHomeScreenVisible,
+              visible: !isHomeScreenVisible && !isRegistrationVisible,
               child: Column(
                 children: [
                   Image.asset('lib/assets/main-logo.png'),
@@ -111,6 +119,27 @@ class _AdminPageState extends State<AdminPage> {
                       ),
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AdminSettings(),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.settings, color: Colors.blue),
+                        label: const Text('Settings',style: TextStyle(color: Colors.blue),),
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(double.infinity, 48), // Set minimum size
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -120,6 +149,16 @@ class _AdminPageState extends State<AdminPage> {
                 onClose: () {
                   setState(() {
                     isHomeScreenVisible = false;
+                  });
+                },
+              ),
+            ),
+            Visibility(
+              visible: isRegistrationVisible,
+              child: RegistrationScreen(
+                onClose: () {
+                  setState(() {
+                    isRegistrationVisible = false;
                   });
                 },
               ),
