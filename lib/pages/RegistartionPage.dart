@@ -28,7 +28,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'lib/assets/main-logo.png',
+                'lib/assets/main-logo-2.png',
                 width: 250,
                 height: 250,
                 fit: BoxFit.contain,

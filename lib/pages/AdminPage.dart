@@ -61,7 +61,10 @@ class _AdminPageState extends State<AdminPage> {
               visible: !isHomeScreenVisible && !isRegistrationVisible,
               child: Column(
                 children: [
-                  Image.asset('lib/assets/main-logo.png'),
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Image.asset('lib/assets/main-logo-2.png',scale: 5,),
+                  ),
                   const Padding(
                     padding: EdgeInsets.all(8.0),
                     child: TextField(

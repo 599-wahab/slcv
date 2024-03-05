@@ -26,12 +26,14 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const SizedBox(height: 100,),
               Image.asset(
-                'lib/assets/main-logo.png',
-                width: 250,
-                height: 250,
+                'lib/assets/main-logo-2.png',
+                width: 150,
+                height: 150,
                 fit: BoxFit.contain,
               ),
+              const SizedBox(height: 50,),
               Card(
                 margin: const EdgeInsets.all(23),
                 shadowColor: const Color(0xFF2195F2),
@@ -108,13 +110,14 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         child: const Text(
                           'Login',
-                          style: TextStyle(fontSize: 18),
+                          style: TextStyle(fontSize: 18,color: Colors.white),
                         ),
                       ),
                     ],
                   ),
                 ),
               ),
+              const SizedBox(height: 30,),
               TextButton(
                 onPressed: () {
                   // Add navigation to registration page here
@@ -134,6 +137,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
+              const SizedBox(height: 30,),
             ],
           ),
         ),
