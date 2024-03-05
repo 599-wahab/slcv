@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AdminSettings extends StatelessWidget {
-  const AdminSettings({Key? key}) : super(key: key);
+  const AdminSettings({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,15 +21,15 @@ class AdminSettings extends StatelessWidget {
             ),
             buildCard(
               title: 'Notification Settings',
-              child: NotificationSettings(),
+              child: const NotificationSettings(),
             ),
             buildCard(
               title: 'Theme',
-              child: ThemeSettings(),
+              child: const ThemeSettings(),
             ),
             buildCard(
               title: 'Admin Access',
-              child: AdminAccessList(),
+              child: const AdminAccessList(),
             ),
           ],
         ),
@@ -71,7 +71,7 @@ class AdminSettings extends StatelessWidget {
 }
 
 class ChangePasswordForm extends StatelessWidget {
-  const ChangePasswordForm({Key? key}) : super(key: key);
+  const ChangePasswordForm({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -103,6 +103,8 @@ class ChangePasswordForm extends StatelessWidget {
 }
 
 class NotificationSettings extends StatelessWidget {
+  const NotificationSettings({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -134,6 +136,8 @@ class NotificationSettings extends StatelessWidget {
 }
 
 class ThemeSettings extends StatefulWidget {
+  const ThemeSettings({super.key});
+
   @override
   _ThemeSettingsState createState() => _ThemeSettingsState();
 }
@@ -212,6 +216,8 @@ class _ThemeSettingsState extends State<ThemeSettings> {
 }
 
 class AdminAccessList extends StatelessWidget {
+  const AdminAccessList({super.key});
+
   @override
   Widget build(BuildContext context) {
     // Example list of admins, replace with actual data

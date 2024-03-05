@@ -1,21 +1,18 @@
 import 'dart:io';
-import 'dart:math';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:image/image.dart' as img;
-import 'AdminPage.dart'; // Import the AdminPage
+// Import the AdminPage
 
-class RegistrationScreen extends StatefulWidget {
+class user_registration extends StatefulWidget {
   final VoidCallback? onClose; // Add onClose parameter
 
-  const RegistrationScreen({Key? key, this.onClose}) : super(key: key);
+  const user_registration({super.key, this.onClose});
 
   @override
-  State<RegistrationScreen> createState() => _RegistrationScreenState();
+  State<user_registration> createState() => _user_registrationState();
 }
 
-class _RegistrationScreenState extends State<RegistrationScreen> {
+class _user_registrationState extends State<user_registration> {
   late ImagePicker imagePicker;
   File? _image;
   TextEditingController emailController = TextEditingController();
@@ -94,7 +91,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       onWillPop: _onWillPop,
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        body: LayoutBuilder(
+        body:LayoutBuilder(
           builder: (context, constraints) {
             return SingleChildScrollView(
               scrollDirection: Axis.vertical,
@@ -103,7 +100,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   minHeight: constraints.maxHeight,
                 ),
                 child: Container(
-                  padding: EdgeInsets.only(left: isWindows ? 20 : 0, right: isWindows ? 20 : 0), // Add padding only for Windows platform
+                  padding: EdgeInsets.only(bottom: isWindows ? 7 : 7), // Add padding only for Windows platform
                   decoration: isWindows
                       ? BoxDecoration(
                     border: Border.all(
@@ -142,13 +139,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         height: isWindows ? 400 : screenWidth * 0.8,
                         child: Image.file(_image!),
                       )
-                          : Container(
-                        child: Image.asset(
-                          "images/logo.png",
-                          width: isWindows ? 400 : screenWidth * 0.8,
-                          height: isWindows ? 400 : screenWidth * 0.8,
-                        ),
-                      ),
+                          : Padding(
+                            padding: const EdgeInsets.all(13.0),
+                            child: Image.asset(
+                              "images/logo.png",
+                              width: isWindows ? 400 : screenWidth * 0.8,
+                              height: isWindows ? 400 : screenWidth * 0.8,
+                            ),
+                          ),
                       Padding(
                         padding: const EdgeInsets.all(17.0),
                         child: Row(

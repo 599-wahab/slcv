@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:slcv/pages/LoginPage.dart';
+import 'package:slcv/pages/login_page.dart';
 
 void main() {
   runApp(const MyApp());

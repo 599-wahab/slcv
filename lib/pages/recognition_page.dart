@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 class RecognitionScreen extends StatefulWidget {
   final VoidCallback onClose;
 
-  const RecognitionScreen({Key? key, required this.onClose}) : super(key: key);
+  const RecognitionScreen({super.key, required this.onClose});
 
   @override
   State<RecognitionScreen> createState() => _RecognitionScreenState();
@@ -62,14 +62,15 @@ class _RecognitionScreenState extends State<RecognitionScreen> {
             onCloseScreen(); // Close the RecognitionScreen on left swipe
           }
         },
-        child: Container(
+        child: SizedBox(
           width: screenWidth,
           height: screenHeight,
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center, // Align elements in the center vertically
               children: [
-                Container(
+            SafeArea(
+            child:Container(
                   width: screenWidth * 0.8,
                   height: screenWidth * 0.3,
                   margin: EdgeInsets.only(top: screenHeight * 0.1), // Adjust top margin here
@@ -83,6 +84,7 @@ class _RecognitionScreenState extends State<RecognitionScreen> {
                     fit: BoxFit.contain,
                   ),
                 ),
+            ),
                 SizedBox(height: screenHeight * 0.1), // Reduce the space between the image and buttons
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,

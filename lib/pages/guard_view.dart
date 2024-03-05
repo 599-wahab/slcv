@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'CameraColumn.dart'; // Import the CameraColumn widget
+import 'camera_column.dart'; // Import the CameraColumn widget
 
 class GuardView extends StatelessWidget {
-  const GuardView({Key? key}) : super(key: key);
+  const GuardView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class GuardView extends StatelessWidget {
       body: Stack(
         children: [
           // Camera view
-          CameraColumn(isEntriesVisible: true), // Use the CameraColumn widget here
+          const CameraColumn(isEntriesVisible: true), // Use the CameraColumn widget here
           // Overlay content
           Positioned.fill(
             child: Padding(

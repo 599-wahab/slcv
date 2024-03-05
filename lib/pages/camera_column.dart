@@ -1,31 +1,24 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:camera/camera.dart';
 import 'package:permission_handler/permission_handler.dart';
-
 class CameraColumn extends StatefulWidget {
   final bool isEntriesVisible;
-
-  const CameraColumn({Key? key, required this.isEntriesVisible}) : super(key: key);
-
+  const CameraColumn({super.key, required this.isEntriesVisible});
   @override
   _CameraColumnState createState() => _CameraColumnState();
 }
-
 class _CameraColumnState extends State<CameraColumn> with WidgetsBindingObserver {
   late CameraController _cameraController;
   late List<CameraDescription> _cameras = [];
   bool _isCameraInitialized = false;
-
   @override
   void initState() {
     super.initState();
     _initializeCamera();
-    WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
   }
-
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
@@ -37,7 +30,6 @@ class _CameraColumnState extends State<CameraColumn> with WidgetsBindingObserver
       }
     }
   }
-
   Future<void> _initializeCamera() async {
     WidgetsFlutterBinding.ensureInitialized();
 
@@ -46,7 +38,6 @@ class _CameraColumnState extends State<CameraColumn> with WidgetsBindingObserver
     if (!cameraPermissionGranted) {
       return;
     }
-
     // Check if the camera plugin is available
     try {
       final cameras = await availableCameras();
@@ -61,12 +52,10 @@ class _CameraColumnState extends State<CameraColumn> with WidgetsBindingObserver
     } on CameraException catch (e) {
       print('Error initializing camera: $e');
     }
-
     if (mounted) {
       setState(() {}); // Refresh widget after camera initialization
     }
   }
-
   Future<bool> _requestCameraPermission() async {
     if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
       // Check camera permission for Windows, MacOS, Linux
@@ -92,16 +81,14 @@ class _CameraColumnState extends State<CameraColumn> with WidgetsBindingObserver
     }
     return true;
   }
-
   @override
   void dispose() {
     if (_isCameraInitialized) {
       _cameraController.dispose();
     }
-    WidgetsBinding.instance?.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     return widget.isEntriesVisible
@@ -131,7 +118,6 @@ class _CameraColumnState extends State<CameraColumn> with WidgetsBindingObserver
     )
         : Container();
   }
-
   Widget _buildGridLayout(int rowCount, int columnCount) {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -151,7 +137,6 @@ class _CameraColumnState extends State<CameraColumn> with WidgetsBindingObserver
       },
     );
   }
-
   Widget _buildCameraPreview(int index) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0), // Adjust the padding as needed
@@ -161,7 +146,6 @@ class _CameraColumnState extends State<CameraColumn> with WidgetsBindingObserver
       ),
     );
   }
-
   Widget _buildPlaceholderWithPlusSign() {
     return Container(
       color: Colors.grey[300],

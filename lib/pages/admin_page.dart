@@ -1,13 +1,12 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'LoginPage.dart';
-import 'CameraColumn.dart';
-import 'HomeScreen.dart';
-import 'User_Registration.dart';
-import 'AdminSettings.dart';
+import 'login_page.dart';
+import 'camera_column.dart';
+import 'home_screen.dart';
+import 'user_registration.dart';
+import 'admin_settings.dart';
 
 class AdminPage extends StatefulWidget {
-  const AdminPage({Key? key}) : super(key: key);
+  const AdminPage({super.key});
 
   @override
   _AdminPageState createState() => _AdminPageState();
@@ -16,8 +15,6 @@ class AdminPage extends StatefulWidget {
 class _AdminPageState extends State<AdminPage> {
   bool isAdminAuthenticated = true;
   bool isEntriesVisible = true;
-
-  late Timer _timer; // Remove the timer
 
   bool isHomeScreenVisible = false;
   bool isRegistrationVisible = false;
@@ -30,8 +27,6 @@ class _AdminPageState extends State<AdminPage> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: AppBar(
@@ -59,7 +54,8 @@ class _AdminPageState extends State<AdminPage> {
           children: [
             Visibility(
               visible: !isHomeScreenVisible && !isRegistrationVisible,
-              child: Column(
+              child: SafeArea(
+                  child: Column(
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(20),
@@ -110,7 +106,7 @@ class _AdminPageState extends State<AdminPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const RegistrationScreen(),
+                              builder: (context) => const user_registration(),
                             ),
                           );
                         },
@@ -146,6 +142,7 @@ class _AdminPageState extends State<AdminPage> {
                 ],
               ),
             ),
+            ),
             Visibility(
               visible: isHomeScreenVisible,
               child: HomeScreen(
@@ -158,7 +155,7 @@ class _AdminPageState extends State<AdminPage> {
             ),
             Visibility(
               visible: isRegistrationVisible,
-              child: RegistrationScreen(
+              child: user_registration(
                 onClose: () {
                   setState(() {
                     isRegistrationVisible = false;

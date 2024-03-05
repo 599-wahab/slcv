@@ -1,12 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'RecognitionPage.dart';
+import 'recognition_page.dart';
 import 'dart:io' if (dart.library.io) 'dart:io'; // Conditional import for dart:io
 
 class HomeScreen extends StatefulWidget {
   final VoidCallback onClose; // Define the onClose callback
 
-  const HomeScreen({Key? key, required this.onClose}) : super(key: key); // Update the constructor
+  const HomeScreen({super.key, required this.onClose}); // Update the constructor
 
   @override
   State<HomeScreen> createState() => _HomePageState();
@@ -66,7 +65,7 @@ class _HomePageState extends State<HomeScreen> {
                                   });
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  minimumSize: isMobilePlatform ? Size(screenWidth * 0.8, screenHeight * 0.08) : Size(200, 40),
+                                  minimumSize: isMobilePlatform ? Size(screenWidth * 0.8, screenHeight * 0.08) : const Size(200, 40),
                                 ),
                                 child: const Text("Recognize"),
                               ),
