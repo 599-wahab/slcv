@@ -28,3 +28,7 @@ subprojects {
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
+
+dependencies {
+    implementation 'org.tensorflow:tensorflow-lite:2.9.0'
+}

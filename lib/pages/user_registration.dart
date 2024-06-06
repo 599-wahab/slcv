@@ -1,10 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-// Import the AdminPage
+import 'package:path_provider/path_provider.dart';
 
 class user_registration extends StatefulWidget {
-  final VoidCallback? onClose; // Add onClose parameter
+  final VoidCallback? onClose;
 
   const user_registration({super.key, this.onClose});
 
@@ -20,11 +21,30 @@ class _user_registrationState extends State<user_registration> {
   TextEditingController CNICController = TextEditingController();
   TextEditingController RegistrationNumberController = TextEditingController();
   TextEditingController LabeController = TextEditingController();
+  late Directory _appDocDir;
+  late File _jsonFile;
+  Map<String, dynamic> _facesData = {};
 
   @override
   void initState() {
     super.initState();
     imagePicker = ImagePicker();
+    _initializeFile();
+  }
+
+  Future<void> _initializeFile() async {
+    _appDocDir = await getApplicationDocumentsDirectory();
+    _jsonFile = File('${_appDocDir.path}/savedFaces.json');
+    if (_jsonFile.existsSync()) {
+      _facesData = json.decode(_jsonFile.readAsStringSync());
+    }
+  }
+
+  Future<void> _saveImage(File image, String label) async {
+    final String imagePath = '${_appDocDir.path}/assets/$label.png';
+    final File newImage = await image.copy(imagePath);
+    _facesData[label] = imagePath;
+    _jsonFile.writeAsStringSync(json.encode(_facesData));
   }
 
   _imgFromCamera() async {
@@ -51,8 +71,19 @@ class _user_registrationState extends State<user_registration> {
     // Perform face detection here
   }
 
-  void register() {
-    // Implement registration logic here
+  void register() async {
+    if (_image != null && usernameController.text.isNotEmpty) {
+      await _saveImage(_image!, usernameController.text);
+      // Show success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Face registered successfully')),
+      );
+    } else {
+      // Show error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in all fields and select an image')),
+      );
+    }
   }
 
   Future<bool> _onWillPop() async {
@@ -91,7 +122,7 @@ class _user_registrationState extends State<user_registration> {
       onWillPop: _onWillPop,
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        body:LayoutBuilder(
+        body: LayoutBuilder(
           builder: (context, constraints) {
             return SingleChildScrollView(
               scrollDirection: Axis.vertical,
@@ -140,13 +171,13 @@ class _user_registrationState extends State<user_registration> {
                         child: Image.file(_image!),
                       )
                           : Padding(
-                            padding: const EdgeInsets.all(13.0),
-                            child: Image.asset(
-                              "images/logo.png",
-                              width: isWindows ? 400 : screenWidth * 0.8,
-                              height: isWindows ? 400 : screenWidth * 0.8,
-                            ),
-                          ),
+                        padding: const EdgeInsets.all(13.0),
+                        child: Image.asset(
+                          "images/logo.png",
+                          width: isWindows ? 400 : screenWidth * 0.8,
+                          height: isWindows ? 400 : screenWidth * 0.8,
+                        ),
+                      ),
                       Padding(
                         padding: const EdgeInsets.all(17.0),
                         child: Row(

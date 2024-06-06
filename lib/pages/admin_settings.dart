@@ -159,8 +159,8 @@ class _ThemeSettingsState extends State<ThemeSettings> {
                   });
                 },
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
+                  backgroundColor: WidgetStateProperty.resolveWith<Color>(
+                        (Set<WidgetState> states) {
                       return selectedIndex == 0
                           ? Colors.blue
                           : Colors.grey.withOpacity(0.5);
@@ -178,8 +178,8 @@ class _ThemeSettingsState extends State<ThemeSettings> {
                   });
                 },
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
+                  backgroundColor: WidgetStateProperty.resolveWith<Color>(
+                        (Set<WidgetState> states) {
                       return selectedIndex == 1
                           ? Colors.blue
                           : Colors.grey.withOpacity(0.5);
@@ -197,8 +197,8 @@ class _ThemeSettingsState extends State<ThemeSettings> {
                   });
                 },
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
+                  backgroundColor: WidgetStateProperty.resolveWith<Color>(
+                        (Set<WidgetState> states) {
                       return selectedIndex == 2
                           ? Colors.blue
                           : Colors.grey.withOpacity(0.5);

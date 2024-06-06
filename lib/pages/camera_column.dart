@@ -1,24 +1,37 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:tflite/tflite.dart';
+import 'package:path_provider/path_provider.dart';
+
 class CameraColumn extends StatefulWidget {
   final bool isEntriesVisible;
+
   const CameraColumn({super.key, required this.isEntriesVisible});
+
   @override
   _CameraColumnState createState() => _CameraColumnState();
 }
+
 class _CameraColumnState extends State<CameraColumn> with WidgetsBindingObserver {
   late CameraController _cameraController;
   late List<CameraDescription> _cameras = [];
   bool _isCameraInitialized = false;
+  bool _isModelLoaded = false;
+  Map<String, dynamic> _facesData = {};
+
   @override
   void initState() {
     super.initState();
     _initializeCamera();
+    loadModel();
+    _loadSavedFaces();
     WidgetsBinding.instance.addObserver(this);
   }
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
@@ -30,15 +43,15 @@ class _CameraColumnState extends State<CameraColumn> with WidgetsBindingObserver
       }
     }
   }
+
   Future<void> _initializeCamera() async {
     WidgetsFlutterBinding.ensureInitialized();
 
-    // Check camera permissions
     final bool cameraPermissionGranted = await _requestCameraPermission();
     if (!cameraPermissionGranted) {
       return;
     }
-    // Check if the camera plugin is available
+
     try {
       final cameras = await availableCameras();
       _cameras = cameras;
@@ -52,13 +65,14 @@ class _CameraColumnState extends State<CameraColumn> with WidgetsBindingObserver
     } on CameraException catch (e) {
       print('Error initializing camera: $e');
     }
+
     if (mounted) {
-      setState(() {}); // Refresh widget after camera initialization
+      setState(() {});
     }
   }
+
   Future<bool> _requestCameraPermission() async {
     if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-      // Check camera permission for Windows, MacOS, Linux
       PermissionStatus cameraPermissionStatus = await Permission.camera.request();
       if (cameraPermissionStatus != PermissionStatus.granted) {
         showDialog(
@@ -81,6 +95,25 @@ class _CameraColumnState extends State<CameraColumn> with WidgetsBindingObserver
     }
     return true;
   }
+
+  Future<void> loadModel() async {
+    await Tflite.loadModel(
+      model: "assets/mobilefacenet.tflite",
+      // Remove the labels parameter
+    );
+    _isModelLoaded = true;
+  }
+
+  Future<void> _loadSavedFaces() async {
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    File jsonFile = File('${appDocDir.path}/savedFaces.json');
+    if (jsonFile.existsSync()) {
+      setState(() {
+        _facesData = json.decode(jsonFile.readAsStringSync());
+      });
+    }
+  }
+
   @override
   void dispose() {
     if (_isCameraInitialized) {
@@ -89,73 +122,45 @@ class _CameraColumnState extends State<CameraColumn> with WidgetsBindingObserver
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
+
+  Future<void> _runModelOnFrame(CameraImage cameraImage) async {
+    if (_isModelLoaded) {
+      var recognitions = await Tflite.runModelOnFrame(
+        bytesList: cameraImage.planes.map((plane) {
+          return plane.bytes;
+        }).toList(),
+        imageHeight: cameraImage.height,
+        imageWidth: cameraImage.width,
+        imageMean: 127.5,
+        imageStd: 127.5,
+        rotation: 90,
+        numResults: 1,
+      );
+      print(recognitions);
+      // Process the recognitions here
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return widget.isEntriesVisible
-        ? _isCameraInitialized
-        ? LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        if (constraints.maxWidth > constraints.maxHeight) {
-          // Landscape orientation
-          if (constraints.maxWidth > constraints.maxHeight * 2) {
-            // Full screen, split into 4 squares
-            return _buildGridLayout(2, 2);
-          } else {
-            // Half screen, split vertically
-            return _buildGridLayout(2, 1);
-          }
-        } else {
-          // Portrait orientation, split vertically
-          return _buildGridLayout(2, 1);
-        }
-      },
-    )
-        : Center(
-      child: ElevatedButton(
-        onPressed: _initializeCamera,
-        child: const Text('Add Camera'),
-      ),
-    )
+        ? _isCameraInitialized && _isModelLoaded
+        ? LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
+      if (constraints.maxWidth > constraints.maxHeight) {
+        return SizedBox(
+          width: constraints.maxWidth,
+          height: constraints.maxHeight,
+          child: CameraPreview(_cameraController),
+        );
+      } else {
+        return SizedBox(
+          width: constraints.maxWidth,
+          height: constraints.maxHeight,
+          child: const Text('Please turn your device to landscape mode.'),
+        );
+      }
+    })
+        : const Center(child: CircularProgressIndicator())
         : Container();
-  }
-  Widget _buildGridLayout(int rowCount, int columnCount) {
-    return GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: columnCount,
-        crossAxisSpacing: 5.0,
-        mainAxisSpacing: 5.0,
-      ),
-      itemCount: rowCount * columnCount,
-      itemBuilder: (BuildContext context, int index) {
-        if (index < _cameras.length) {
-          // Display camera preview in the grid cell if camera available
-          return _buildCameraPreview(index);
-        } else {
-          // Display placeholder with plus sign in other grid cells
-          return _buildPlaceholderWithPlusSign();
-        }
-      },
-    );
-  }
-  Widget _buildCameraPreview(int index) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0), // Adjust the padding as needed
-      child: AspectRatio(
-        aspectRatio: _cameraController.value.aspectRatio,
-        child: CameraPreview(_cameraController),
-      ),
-    );
-  }
-  Widget _buildPlaceholderWithPlusSign() {
-    return Container(
-      color: Colors.grey[300],
-      child: Center(
-        child: Icon(
-          Icons.add,
-          size: 48.0,
-          color: Colors.grey[600],
-        ),
-      ),
-    );
   }
 }
